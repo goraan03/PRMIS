@@ -23,6 +23,8 @@ namespace ServerApp.Services
 
             string algoritam = AlgorithmDetector.DetermineAlgorithm(validData, desHash, rsaHash);
             Console.WriteLine($"\nKoristimo {algoritam} algoritam.");
+
+            ServerNetworkCommunicator.SendAndReceiveMessageTCP(acceptedSocket, validData, algoritam);
         }
 
         public static void HandleUdp(Socket udpSocket, string desHash, string rsaHash)
@@ -34,6 +36,8 @@ namespace ServerApp.Services
 
             string algoritam = AlgorithmDetector.DetermineAlgorithm(validData, desHash, rsaHash);
             Console.WriteLine($"\nKoristimo {algoritam} algoritam.");
+
+            ServerNetworkCommunicator.SendAndReceiveMessageUDP(udpSocket, validData, algoritam);
         }
     }
 }

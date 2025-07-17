@@ -23,6 +23,8 @@ namespace ClientApp.Services
 
             clientSocket.Send(payload);
             Console.WriteLine("TCP klijent poslao hes serveru.");
+
+            ClientNetworkCommunicator.SendAndReceiveMessageTCP(clientSocket, payload, algoritam);
         }
 
         public static void HandleUdp(string algoritam)
@@ -36,6 +38,8 @@ namespace ClientApp.Services
 
             clientSocket.SendTo(payload, serverEP);
             Console.WriteLine("UDP klijent poslao hes serveru.");
+
+            ClientNetworkCommunicator.SendAndReceiveMessageUDP(clientSocket, payload, algoritam);
         }
     }
 }
