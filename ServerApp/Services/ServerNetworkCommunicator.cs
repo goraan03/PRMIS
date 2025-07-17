@@ -34,11 +34,19 @@ namespace ServerApp.Services
                         Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta (Base64):");
                         Console.WriteLine(base64Message);
 
+                        var stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
                         DesAlgorithm desAlg = new DesAlgorithm(base64Message, kljuc, iv);
                         string decryptedMessage = desAlg.Decrypt(Convert.FromBase64String(base64Message));
 
+                        stopwatch.Stop();
+
                         Console.WriteLine($"\n>> Dekriptovana poruka:");
                         Console.WriteLine(decryptedMessage);
+                        Console.WriteLine($">> Vreme dekripcije: {stopwatch.Elapsed.TotalMilliseconds:F2} ms");
+
+                        StatisticsManager.DodajStatistiku("DES", decryptedMessage.Length, stopwatch.Elapsed.TotalMilliseconds);
 
                         Console.WriteLine("\n>> Unesite eho poruku koju želite da pošaljete nazad klijentu:");
                         string echoMessage = Console.ReadLine();
@@ -82,12 +90,20 @@ namespace ServerApp.Services
                         string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, brBajta);
                         Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta.");
 
+                        var stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
                         string serverPrivateKeyXml = RsaCryptoHelper.GetPrivateKeyXml();
                         var rsaDecryptor = new RsaAlgorithm(encryptedMessage, serverPrivateKeyXml);
                         string decryptedMessage = rsaDecryptor.Decrypt();
 
+                        stopwatch.Stop();
+
                         Console.WriteLine(">> Dekriptovana poruka klijenta:");
                         Console.WriteLine(decryptedMessage);
+                        Console.WriteLine($">> Vreme dekripcije: {stopwatch.Elapsed.TotalMilliseconds:F2} ms");
+
+                        StatisticsManager.DodajStatistiku("RSA", decryptedMessage.Length, stopwatch.Elapsed.TotalMilliseconds);
 
                         Console.Write("\n>> Unesite eho poruku za slanje klijentu: ");
                         string echoMessage = Console.ReadLine();
@@ -130,11 +146,19 @@ namespace ServerApp.Services
                         Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta (Base64):");
                         Console.WriteLine(base64Message);
 
+                        var stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
                         DesAlgorithm desAlg = new DesAlgorithm(base64Message, kljuc, iv);
                         string decryptedMessage = desAlg.Decrypt(Convert.FromBase64String(base64Message));
 
+                        stopwatch.Stop();
+
                         Console.WriteLine("\n>> Dekriptovana poruka:");
                         Console.WriteLine(decryptedMessage);
+                        Console.WriteLine($">> Vreme dekripcije: {stopwatch.Elapsed.TotalMilliseconds:F2} ms");
+
+                        StatisticsManager.DodajStatistiku("DES", decryptedMessage.Length, stopwatch.Elapsed.TotalMilliseconds);
 
                         Console.WriteLine("\n>> Unesite eho poruku koju želite da pošaljete nazad klijentu:");
                         string echoMessage = Console.ReadLine();
@@ -177,12 +201,20 @@ namespace ServerApp.Services
                         string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, brBajta);
                         Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta.");
 
+                        var stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
                         string serverPrivateKeyXml = RsaCryptoHelper.GetPrivateKeyXml();
                         var rsaDecryptor = new RsaAlgorithm(encryptedMessage, serverPrivateKeyXml);
                         string decryptedMessage = rsaDecryptor.Decrypt();
 
+                        stopwatch.Stop();
+
                         Console.WriteLine(">> Dekriptovana poruka klijenta:");
                         Console.WriteLine(decryptedMessage);
+                        Console.WriteLine($">> Vreme dekripcije: {stopwatch.Elapsed.TotalMilliseconds:F2} ms");
+
+                        StatisticsManager.DodajStatistiku("RSA", decryptedMessage.Length, stopwatch.Elapsed.TotalMilliseconds);
 
                         Console.Write("\n>> Unesite eho poruku za slanje klijentu: ");
                         string echoMessage = Console.ReadLine();
