@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Helpers;
+using Common.Models;
 
 namespace ServerApp.Services
 {
@@ -24,6 +25,10 @@ namespace ServerApp.Services
             string algoritam = AlgorithmDetector.DetermineAlgorithm(validData, desHash, rsaHash);
             Console.WriteLine($"\nKoristimo {algoritam} algoritam.");
 
+            NacinKomunikacije komunikacija = KomunikacijaHelper.NapraviNacinKomunikacije(acceptedSocket.RemoteEndPoint, validData, algoritam);
+            Console.WriteLine("Informacije o komunikaciji: ");
+            Console.WriteLine(komunikacija);
+
             ServerNetworkCommunicator.SendAndReceiveMessageTCP(acceptedSocket, validData, algoritam);
         }
 
@@ -36,6 +41,10 @@ namespace ServerApp.Services
 
             string algoritam = AlgorithmDetector.DetermineAlgorithm(validData, desHash, rsaHash);
             Console.WriteLine($"\nKoristimo {algoritam} algoritam.");
+
+            NacinKomunikacije komunikacija = KomunikacijaHelper.NapraviNacinKomunikacije(clientEP, validData, algoritam);
+            Console.WriteLine("Informacije o komunikaciji: ");
+            Console.WriteLine(komunikacija);
 
             ServerNetworkCommunicator.SendAndReceiveMessageUDP(udpSocket, validData, algoritam);
         }
