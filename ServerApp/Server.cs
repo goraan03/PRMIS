@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Linq;
 using ServerApp.Services;
+using Common.Helpers;
 
 namespace ServerApp
 {
@@ -14,6 +15,11 @@ namespace ServerApp
 
         static void Main(string[] args)
         {
+            byte[] desHashBytes = GenerateAlgorithmHashes.ComputeSHA256Hash("DES");
+            byte[] rsaHashBytes = GenerateAlgorithmHashes.ComputeSHA256Hash("RSA");
+
+            string desHash = GenerateAlgorithmHashes.ToHexString(desHashBytes);
+            string rsaHash = GenerateAlgorithmHashes.ToHexString(rsaHashBytes);
 
             Socket tcpSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             tcpSocket.Bind(tcp_serverEP);
@@ -30,15 +36,15 @@ namespace ServerApp
 
             if (activeSocket == tcpSocket)
             {
-                ServerCommunicationHandler.HandleTcp(tcpSocket);
+                ServerCommunicationHandler.HandleTcp(tcpSocket, desHash, rsaHash);
                 udpSocket.Close();
             }
             else if (activeSocket == udpSocket)
             {
-                ServerCommunicationHandler.HandleUdp(udpSocket);
+                ServerCommunicationHandler.HandleUdp(udpSocket, desHash, rsaHash);
                 tcpSocket.Close();
             }
-
+            
             Console.ReadLine();
         }
     }

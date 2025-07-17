@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Common.Helpers;
 
 namespace ClientApp.Services
 {
@@ -17,6 +18,11 @@ namespace ClientApp.Services
             clientSocket.Connect(serverEP);
 
             Console.WriteLine("TCP klijent povezan sa serverom.");
+
+            byte[] payload = CryptoInfoGenerator.GenerateCryptoPayload(algoritam);
+
+            clientSocket.Send(payload);
+            Console.WriteLine("TCP klijent poslao hes serveru.");
         }
 
         public static void HandleUdp(string algoritam)
@@ -25,6 +31,11 @@ namespace ClientApp.Services
             IPEndPoint serverEP = new IPEndPoint(IPAddress.Loopback, 50002);
 
             Console.WriteLine("UDP klijent spreman za slanje.");
+
+            byte[] payload = CryptoInfoGenerator.GenerateCryptoPayload(algoritam);
+
+            clientSocket.SendTo(payload, serverEP);
+            Console.WriteLine("UDP klijent poslao hes serveru.");
         }
     }
 }
