@@ -62,7 +62,48 @@ namespace ServerApp.Services
                 }
                 else if (algoritam == "RSA")
                 {
-                    Console.WriteLine("Nije jos implementirano");
+                    try
+                    {
+                        Console.WriteLine("\n==================== SERVER TCP [RSA] KOMUNIKACIJA ====================");
+
+                        byte[] buffer = new byte[4096];
+
+                        int brBajta = serverSocket.Receive(buffer);
+                        string clientPublicKeyBase64 = Encoding.UTF8.GetString(buffer, 0, brBajta);
+                        string clientPublicKeyXml = Encoding.UTF8.GetString(Convert.FromBase64String(clientPublicKeyBase64));
+                        Console.WriteLine("\n>> Primljen javni ključ od klijenta.");
+
+                        string serverPublicKeyXml = RsaCryptoHelper.GetPublicKeyXml();
+                        string serverPublicKeyBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(serverPublicKeyXml));
+                        serverSocket.Send(Encoding.UTF8.GetBytes(serverPublicKeyBase64));
+                        Console.WriteLine(">> Server je poslao svoj javni ključ klijentu.");
+
+                        brBajta = serverSocket.Receive(buffer);
+                        string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, brBajta);
+                        Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta.");
+
+                        string serverPrivateKeyXml = RsaCryptoHelper.GetPrivateKeyXml();
+                        var rsaDecryptor = new RsaAlgorithm(encryptedMessage, serverPrivateKeyXml);
+                        string decryptedMessage = rsaDecryptor.Decrypt();
+
+                        Console.WriteLine(">> Dekriptovana poruka klijenta:");
+                        Console.WriteLine(decryptedMessage);
+
+                        Console.Write("\n>> Unesite eho poruku za slanje klijentu: ");
+                        string echoMessage = Console.ReadLine();
+
+                        var rsaEncryptor = new RsaAlgorithm(echoMessage, clientPublicKeyXml);
+                        string encryptedResponse = rsaEncryptor.Encrypt();
+
+                        serverSocket.Send(Encoding.UTF8.GetBytes(encryptedResponse));
+                        Console.WriteLine(">> Enkriptovani odgovor je poslat klijentu.");
+
+                        Console.WriteLine("\n=====================================================================");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\n>> Greška u RSA komunikaciji (TCP): {ex.Message}");
+                    }
                 }
             }
         }
@@ -116,7 +157,48 @@ namespace ServerApp.Services
                 }
                 else if (algoritam == "RSA")
                 {
-                    Console.WriteLine("Nije jos implementirano");
+                    try
+                    {
+                        Console.WriteLine("\n==================== SERVER UDP [RSA] KOMUNIKACIJA ====================");
+
+                        //int hashLength = 32;
+
+                        int brBajta = serverSocket.ReceiveFrom(buffer, ref clientEP);
+                        string clientPublicKeyBase64 = Encoding.UTF8.GetString(buffer, 0, brBajta);
+                        string clientPublicKeyXml = Encoding.UTF8.GetString(Convert.FromBase64String(clientPublicKeyBase64));
+                        Console.WriteLine("\n>> Primljen javni ključ od klijenta.");
+
+                        string serverPublicKeyXml = RsaCryptoHelper.GetPublicKeyXml();
+                        string serverPublicKeyBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(serverPublicKeyXml));
+                        serverSocket.SendTo(Encoding.UTF8.GetBytes(serverPublicKeyBase64), clientEP);
+                        Console.WriteLine(">> Server je poslao svoj javni ključ klijentu.");
+
+                        brBajta = serverSocket.ReceiveFrom(buffer, ref clientEP);
+                        string encryptedMessage = Encoding.UTF8.GetString(buffer, 0, brBajta);
+                        Console.WriteLine("\n>> Primljena enkriptovana poruka od klijenta.");
+
+                        string serverPrivateKeyXml = RsaCryptoHelper.GetPrivateKeyXml();
+                        var rsaDecryptor = new RsaAlgorithm(encryptedMessage, serverPrivateKeyXml);
+                        string decryptedMessage = rsaDecryptor.Decrypt();
+
+                        Console.WriteLine(">> Dekriptovana poruka klijenta:");
+                        Console.WriteLine(decryptedMessage);
+
+                        Console.Write("\n>> Unesite eho poruku za slanje klijentu: ");
+                        string echoMessage = Console.ReadLine();
+
+                        var rsaEncryptor = new RsaAlgorithm(echoMessage, clientPublicKeyXml);
+                        string encryptedResponse = rsaEncryptor.Encrypt();
+
+                        serverSocket.SendTo(Encoding.UTF8.GetBytes(encryptedResponse), clientEP);
+                        Console.WriteLine(">> Enkriptovani odgovor je poslat klijentu.");
+
+                        Console.WriteLine("\n=====================================================================");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"\n>> Greška u UDP RSA komunikaciji: {ex.Message}");
+                    }
                 }
             }
         }
