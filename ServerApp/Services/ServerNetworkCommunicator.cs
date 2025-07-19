@@ -235,19 +235,27 @@ namespace ServerApp.Services
 
         private static void JeKraj()
         {
-            Console.Write("\n>> Da li želite da završite program? (Y/N): ");
-            var odgovor = Console.ReadLine()?.Trim().ToUpper();
+            while (true)
+            {
+                Console.Write("\n>> Da li želite da server nastavi sa radom? (Y/N): ");
+                var odgovor = Console.ReadLine()?.Trim().ToUpper();
 
-            if (odgovor == "Y")
-            {
-                StatisticsManager.PrikaziStatistiku();
-                Console.ReadKey();
-                Console.WriteLine("INFO: Program se zatvara...");
-                Environment.Exit(0);
-            }
-            else
-            {
-                Console.WriteLine("INFO: Nastavljamo sa čekanjem naredne poruke...\n");
+                if (odgovor == "N")
+                {
+                    StatisticsManager.PrikaziStatistiku();
+                    Console.ReadKey();
+                    Console.WriteLine("INFO: Program se zatvara...");
+                    Environment.Exit(0);
+                }
+                else if (odgovor == "Y")
+                {
+                    Console.WriteLine("INFO: Nastavljamo sa čekanjem naredne poruke...\n");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Nepoznat odgovor. Odgovorite sa Y/N.");
+                }
             }
         }
     }

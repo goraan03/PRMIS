@@ -52,6 +52,8 @@ namespace ClientApp.Services
                         Console.WriteLine("\n>> Dekriptovana eho poruka:");
                         Console.WriteLine(decryptedMessage);
 
+                        JeKraj();
+
                         Console.WriteLine("\n================================================================\n");
                     }
                     catch (Exception ex)
@@ -99,6 +101,8 @@ namespace ClientApp.Services
 
                         Console.WriteLine("\n>> Dekriptovana poruka servera:");
                         Console.WriteLine(decryptedMessage);
+
+                        JeKraj();
 
                         Console.WriteLine("\n======================================================================");
                     }
@@ -151,6 +155,8 @@ namespace ClientApp.Services
                         Console.WriteLine("\n>> Dekriptovana eho poruka:");
                         Console.WriteLine(decryptedMessage);
 
+                        JeKraj();
+
                         Console.WriteLine("\n================================================================\n");
                     }
                     catch (Exception ex)
@@ -198,12 +204,38 @@ namespace ClientApp.Services
                         Console.WriteLine("\n>> Dekriptovana poruka servera:");
                         Console.WriteLine(decryptedMessage);
 
+                        JeKraj();
+
                         Console.WriteLine("\n======================================================================");
                     }
                     catch (Exception ex)
                     {
                         Console.WriteLine($"\n>> Greška u RSA komunikaciji (UDP): {ex.Message}");
                     }
+                }
+            }
+        }
+
+        private static void JeKraj()
+        {
+            while (true)
+            {
+                Console.Write("\n>> Da li želite da pošaljete još poruka? (Y/N): ");
+                var odgovor = Console.ReadLine()?.Trim().ToUpper();
+
+                if (odgovor == "N")
+                {
+                    Console.WriteLine("INFO: Klijent završava komunikaciju...");
+                    Environment.Exit(0);
+                }
+                else if (odgovor == "Y")
+                {
+                    Console.WriteLine("INFO: Nastavljamo sa slanjem poruka...\n");
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("INFO: Nepoznat odgovor. Odgovorite ");
                 }
             }
         }
