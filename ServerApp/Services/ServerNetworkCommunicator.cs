@@ -22,7 +22,7 @@ namespace ServerApp.Services
                 {
                     try
                     {
-                        Console.WriteLine("\n\n\n\n\n==================== SERVER TCP [DES] KOMUNIKACIJA ====================");
+                        Console.WriteLine("\n\n\n\n\n================================================================");
 
                         byte[] buffer = new byte[4096];
                         byte[] kljuc = cryptoPayload.Skip(32).Take(8).ToArray();
@@ -71,7 +71,7 @@ namespace ServerApp.Services
                 {
                     try
                     {
-                        Console.WriteLine("\n\n\n\n\n==================== SERVER TCP [RSA] KOMUNIKACIJA ====================");
+                        Console.WriteLine("\n\n\n\n\n================================================================");
 
                         byte[] buffer = new byte[4096];
 
@@ -135,7 +135,7 @@ namespace ServerApp.Services
                 {
                     try
                     {
-                        Console.WriteLine("\n\n\n\n\n==================== SERVER UDP [DES] KOMUNIKACIJA ====================");
+                        Console.WriteLine("\n\n\n\n\n================================================================");
 
                         byte[] kljuc = cryptoPayload.Skip(32).Take(8).ToArray();
                         byte[] iv = cryptoPayload.Skip(40).Take(8).ToArray();
@@ -182,7 +182,7 @@ namespace ServerApp.Services
                 {
                     try
                     {
-                        Console.WriteLine("\n\n\n\n\n==================== SERVER UDP [RSA] KOMUNIKACIJA ====================");
+                        Console.WriteLine("\n\n\n\n\n================================================================");
 
                         int brBajta = serverSocket.ReceiveFrom(buffer, ref clientEP);
                         string clientPublicKeyBase64 = Encoding.UTF8.GetString(buffer, 0, brBajta);
